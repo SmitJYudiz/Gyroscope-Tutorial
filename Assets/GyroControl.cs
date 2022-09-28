@@ -51,6 +51,8 @@ public class GyroControl : MonoBehaviour
         {
             transform.localRotation = gyro.attitude * rot;
         }
+
+
     }
 
     public void OnChangeView()
