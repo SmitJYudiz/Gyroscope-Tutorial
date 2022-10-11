@@ -6,15 +6,21 @@ public class GyroControl : MonoBehaviour
 {
     //smit's work
 
+    #region Variables
+
     private bool gyroEnabled;
-
     private Gyroscope gyro;
-
     private GameObject cameraContainer;
     private Quaternion rot;
-    int currentPositionIndex;
 
+    //additional variables for changing views feature,
+    //if you do not want to have that feature, skip the below two variables
+    int currentPositionIndex;
     public List<Transform> setOfPositionsOfDifferentViews;
+
+    #endregion
+
+    #region Unity Methods
 
     private void Start()
     {
@@ -30,9 +36,21 @@ public class GyroControl : MonoBehaviour
         currentPositionIndex  = 0;
     }
 
+    private void Update()
+    {
+        if(gyroEnabled)
+        {
+            transform.localRotation = gyro.attitude * rot;
+        }        
+    }
+
+    #endregion
+
+    #region Public Methods
+
     bool EnableGyro()
     {
-        if(SystemInfo.supportsGyroscope)
+        if (SystemInfo.supportsGyroscope)
         {
             gyro = Input.gyro;
             gyro.enabled = true;
@@ -45,29 +63,27 @@ public class GyroControl : MonoBehaviour
         return false;
     }
 
-    private void Update()
-    {
-        if(gyroEnabled)
-        {
-            transform.localRotation = gyro.attitude * rot;
-        }
 
-
-    }
-
+    //This methods helps in achieving changing views in game, If you do not want that feature
+    //you may skip the method defined below and the usages of it.
     public void OnChangeView()
     {
-        Debug.Log("succ 1");
         if (setOfPositionsOfDifferentViews.Count >0 && setOfPositionsOfDifferentViews!=null)
         {
             transform.position = setOfPositionsOfDifferentViews[currentPositionIndex].position;
             transform.rotation = setOfPositionsOfDifferentViews[currentPositionIndex].rotation;
+         
             currentPositionIndex++;
             if(currentPositionIndex >= setOfPositionsOfDifferentViews.Count)
             {
                 currentPositionIndex = 0;
-            }
-            Debug.Log("Changed Position successfully");
+            }           
         }
     }
+
+    #endregion
 }
+
+//If you have any doubts or any suggestions you may ping me at
+//my linkedin: https://www.linkedin.com/in/smit-j-a270a71b7
+
